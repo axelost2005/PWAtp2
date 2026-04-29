@@ -5,17 +5,6 @@ import Details from "./pages/Details/Details";
 import Favorites from "./pages/Favorites/Favorites";
 import NotFound from "./pages/NotFound/NotFound";
 
-function App() {
-    return (
-        <Routes>
-            <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/equipos/:id" element={<Details />} />
-                <Route path="/favoritos" element={<Favorites />} />
-                <Route path="*" element={<NotFound />} />
-            </Route>
-        </Routes>
-    );
 import { useEffect, useState } from "react";
 import { getTeams } from "./services/teamsService";
 import { getPlayers } from "./services/playersService";
@@ -70,30 +59,14 @@ function App() {
   
   return (
     <div>
-      <h1>Equipos</h1>
-      <section className="flex flex-wrap gap-4">
-        {teams.map((team) => (
-          <div className="w-40 border p-2 bg-sky-300" key={team.team.id} onClick={() => setSelectedTeam(team.team)} style={{ cursor: "pointer" }}>
-            {team.team.name} 
-            <img src={team.team.logo} width="50" />
-            <div>
-              <p>{team.venue.name}</p>
-              <img src={team.venue.image} width="50" />
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {selectedTeam && (
-        <div>
-          <h1>Jugadores de {selectedTeam.name}</h1>
-          <ul>
-            {players.map((player) => (
-              <li key={player.id}>{player.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <Routes>
+            <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/equipos/:id" element={<Details />} />
+                <Route path="/favoritos" element={<Favorites />} />
+                <Route path="*" element={<NotFound />} />
+            </Route>
+        </Routes>
     </div>
   );
 }
