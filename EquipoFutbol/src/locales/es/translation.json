@@ -1,13 +1,51 @@
 {
-    "home": {
-        "title":"Equipos de futbol"
-    },
-    "profile": {
-        "title":"Perfiles"
+    "app": {
+        "name": "EquipoFútbol"
     },
     "navbar": {
         "home": "Inicio",
         "favorites": "Favoritos"
+    },
+    "common": {
+        "backHome": "Volver al inicio"
+    },
+    "home": {
+        "title": "Equipos de fútbol",
+        "description": "Explorá equipos del fútbol argentino, conocé sus estadios, historia, entrenadores y guardá tus favoritos.",
+        "loading": "Cargando equipos...",
+        "error": "No se pudieron cargar los equipos.",
+        "empty": "No hay equipos para mostrar."
+    },
+    "teamCard": {
+        "logoAlt": "Escudo de {{teamName}}",
+        "league": "Liga",
+        "stadium": "Estadio",
+        "titles": "Títulos",
+        "viewDetail": "Ver detalle"
+    },
+    "details": {
+        "loading": "Cargando detalle del equipo...",
+        "title": "Detalle del equipo",
+        "notFoundTitle": "Equipo no encontrado",
+        "notFoundDescription": "No existe un equipo cargado con ese ID.",
+        "country": "País",
+        "founded": "Fundación",
+        "coach": "Entrenador"
+    },
+    "favorites": {
+        "title": "Favoritos",
+        "description": "Acá se mostrarán los equipos favoritos del usuario."
+    },
+    "notFound": {
+        "description": "La página que estás buscando no existe."
+    },
+    "footer": {
+        "description": "Plataforma ficticia para explorar equipos de fútbol, conocer sus datos principales y guardar favoritos.",
+        "contact": "Contacto",
+        "email": "Email",
+        "phone": "Teléfono",
+        "address": "Dirección",
+        "socialMedia": "Redes sociales",
+        "rights": "© 2026 EquipoFútbol. Todos los derechos reservados."
     }
 }
-

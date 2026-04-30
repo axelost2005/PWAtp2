@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import TeamCard from "../../components/TeamCard/TeamCard";
 import { getTeams } from "../../services/teamsService";
 
 function Home() {
+    const { t } = useTranslation();
+
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -16,31 +19,30 @@ function Home() {
                 const data = await getTeams(1, 20);
                 setTeams(data);
             } catch (error) {
-                setError("No se pudieron cargar los equipos.");
+                setError(t("home.error"));
             } finally {
                 setLoading(false);
             }
         };
 
         loadTeams();
-    }, []);
+    }, [t]);
 
     return (
         <section>
             <div className="mb-8">
                 <h1 className="mb-4 text-3xl font-bold text-slate-950">
-                    Equipos de fútbol
+                    {t("home.title")}
                 </h1>
 
                 <p className="max-w-2xl text-slate-700">
-                    Explorá equipos del fútbol argentino, conocé sus estadios, historia,
-                    entrenadores y guardá tus favoritos.
+                    {t("home.description")}
                 </p>
             </div>
 
             {loading && (
                 <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
-                    Cargando equipos...
+                    {t("home.loading")}
                 </p>
             )}
 
@@ -52,7 +54,7 @@ function Home() {
 
             {!loading && !error && teams.length === 0 && (
                 <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
-                    No hay equipos para mostrar.
+                    {t("home.empty")}
                 </p>
             )}
 

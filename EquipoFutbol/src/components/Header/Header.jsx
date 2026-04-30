@@ -13,7 +13,7 @@ function Header() {
                     className="flex items-center gap-2 text-xl font-bold no-underline"
                 >
                     <span>⚽</span>
-                    <span>EquipoFútbol</span>
+                    <span>{t("app.name")}</span>
                 </Link>
 
                 <nav className="flex items-center gap-6">
