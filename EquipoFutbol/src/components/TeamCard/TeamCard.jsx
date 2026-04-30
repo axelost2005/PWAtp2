@@ -1,16 +1,51 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTranslatedTeam } from "../../utils/teamTranslations";
+import { isFavoriteTeam, toggleFavoriteTeam } from "../../services/localStorage";
 
-function TeamCard({ team }) {
+function TeamCard({ team, onFavoriteChange }) {
     const { t, i18n } = useTranslation();
 
     const currentLanguage = (i18n.resolvedLanguage || i18n.language || "es").split("-")[0];
     const translatedTeam = getTranslatedTeam(team, currentLanguage);
 
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    useEffect(() => {
+        setIsFavorite(isFavoriteTeam(team.id));
+    }, [team.id]);
+
+    const handleFavoriteClick = () => {
+        const updatedFavorites = toggleFavoriteTeam(team);
+
+        setIsFavorite(isFavoriteTeam(team.id));
+
+        if (onFavoriteChange) {
+            onFavoriteChange(updatedFavorites);
+        }
+    };
+
     return (
-        <article className="flex h-[480px] flex-col overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl">
-            <div className="flex h-44 shrink-0 items-center justify-center bg-slate-100 p-5">
+        <article className="flex h-[500px] flex-col overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+            <div className="relative flex h-44 shrink-0 items-center justify-center bg-slate-100 p-5">
+                <button
+                    type="button"
+                    onClick={handleFavoriteClick}
+                    className={`absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-lg shadow transition ${
+                        isFavorite
+                            ? "bg-red-500 text-white hover:bg-red-600"
+                            : "bg-white text-slate-500 hover:bg-red-50 hover:text-red-500"
+                    }`}
+                    aria-label={
+                        isFavorite
+                            ? t("teamCard.removeFavorite")
+                            : t("teamCard.addFavorite")
+                    }
+                >
+                    {isFavorite ? "♥" : "♡"}
+                </button>
+
                 <img
                     src={translatedTeam.logo}
                     alt={t("teamCard.logoAlt", { teamName: translatedTeam.name })}

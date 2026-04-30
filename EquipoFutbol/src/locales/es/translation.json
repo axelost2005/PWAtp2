@@ -17,12 +17,14 @@
         "empty": "No hay equipos para mostrar."
     },
     "teamCard": {
-        "logoAlt": "Escudo de {{teamName}}",
-        "league": "Liga",
-        "stadium": "Estadio",
-        "titles": "Títulos",
-        "viewDetail": "Ver detalle"
-    },
+    "logoAlt": "Escudo de {{teamName}}",
+    "league": "Liga",
+    "stadium": "Estadio",
+    "titles": "Títulos",
+    "viewDetail": "Ver detalle",
+    "addFavorite": "Agregar a favoritos",
+    "removeFavorite": "Quitar de favoritos"
+},
     "details": {
         "loading": "Cargando detalle del equipo...",
         "title": "Detalle del equipo",
@@ -34,7 +36,8 @@
     },
     "favorites": {
         "title": "Favoritos",
-        "description": "Acá se mostrarán los equipos favoritos del usuario."
+        "description": "Acá se mostrarán los equipos favoritos del usuario.",
+        "empty": "Todavía no agregaste equipos a favoritos."
     },
     "notFound": {
         "description": "La página que estás buscando no existe."

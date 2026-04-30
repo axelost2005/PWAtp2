@@ -17,12 +17,14 @@
         "empty": "There are no teams to display."
     },
     "teamCard": {
-        "logoAlt": "{{teamName}} badge",
-        "league": "League",
-        "stadium": "Stadium",
-        "titles": "Titles",
-        "viewDetail": "View details"
-    },
+    "logoAlt": "{{teamName}} badge",
+    "league": "League",
+    "stadium": "Stadium",
+    "titles": "Titles",
+    "viewDetail": "View details",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites"
+},
     "details": {
         "loading": "Loading team details...",
         "title": "Team details",
@@ -33,9 +35,10 @@
         "coach": "Coach"
     },
     "favorites": {
-        "title": "Favorites",
-        "description": "The user's favorite teams will be displayed here."
-    },
+    "title": "Favorites",
+    "description": "These are the user's saved favorite teams.",
+    "empty": "You have not added any favorite teams yet."
+},
     "notFound": {
         "description": "The page you are looking for does not exist."
     },
