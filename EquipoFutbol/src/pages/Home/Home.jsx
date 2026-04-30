@@ -1,49 +1,71 @@
-import { getLocalStorage } from "../../services/localStorage";
+import { useEffect, useState } from "react";
+import TeamCard from "../../components/TeamCard/TeamCard";
+import { getTeams } from "../../services/teamsService";
 
 function Home() {
-    const teams = getLocalStorage("teams") || [];
+    const [teams, setTeams] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const loadTeams = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const data = await getTeams(1, 20);
+                setTeams(data);
+            } catch (error) {
+                setError("No se pudieron cargar los equipos.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadTeams();
+    }, []);
 
     return (
         <section>
-            <h1 className="mb-4 text-3xl font-bold">Equipos de fútbol</h1>
+            <div className="mb-8">
+                <h1 className="mb-4 text-3xl font-bold text-slate-950">
+                    Equipos de fútbol
+                </h1>
 
-            <p className="mb-6 text-slate-700">
-                Página principal donde se mostrará el listado de equipos.
-            </p>
-
-            {teams.length === 0 ? (
-                <p className="rounded-lg bg-white p-4 text-slate-700 shadow">
-                    Todavía no hay equipos cargados.
+                <p className="max-w-2xl text-slate-700">
+                    Explorá equipos del fútbol argentino, conocé sus estadios, historia,
+                    entrenadores y guardá tus favoritos.
                 </p>
-            ) : (
-                <div className="flex flex-wrap gap-4">
-                    {teams.map((teamItem) => (
-                        <div
-                            key={teamItem.team.id}
-                            className="w-48 rounded-lg border bg-slate-800 p-4 text-white shadow"
-                        >
-                            <h2 className="mb-2 font-bold">
-                                {teamItem.team.name}
-                            </h2>
+            </div>
 
-                            <img
-                                src={teamItem.team.logo}
-                                width="50"
-                                alt={`Logo de ${teamItem.team.name}`}
-                                className="mb-2"
-                            />
+            {loading && (
+                <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
+                    Cargando equipos...
+                </p>
+            )}
 
-                            <p className="text-sm">
-                                Estadio: {teamItem.venue.name}
-                            </p>
+            {error && (
+                <p className="rounded-xl bg-red-100 p-4 text-red-700 shadow">
+                    {error}
+                </p>
+            )}
 
-                            <img
-                                src={teamItem.venue.image}
-                                width="80"
-                                alt={`Estadio de ${teamItem.team.name}`}
-                                className="mt-2 rounded"
-                            />
-                        </div>
+            {!loading && !error && teams.length === 0 && (
+                <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
+                    No hay equipos para mostrar.
+                </p>
+            )}
+
+            {!loading && !error && teams.length > 0 && (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    {teams.map((team, index) => (
+                        <TeamCard
+                            key={team.id || index + 1}
+                            team={{
+                                ...team,
+                                id: team.id || String(index + 1),
+                            }}
+                        />
                     ))}
                 </div>
             )}
