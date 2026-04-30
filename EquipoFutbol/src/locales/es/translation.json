@@ -4,6 +4,10 @@
     },
     "profile": {
         "title":"Perfiles"
+    },
+    "navbar": {
+        "home": "Inicio",
+        "favorites": "Favoritos"
     }
 }
 
