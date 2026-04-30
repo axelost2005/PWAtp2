@@ -1,7 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
 import LanguageSelector from "../LanguageSelector/LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 function Header() {
+    const { t } = useTranslation();
+
     return (
         <header className="sticky top-0 z-50 bg-slate-950 text-white shadow-md">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -22,7 +25,7 @@ function Header() {
                                 : "text-slate-200 no-underline transition hover:text-blue-400"
                         }
                     >
-                        Inicio
+                        {t("navbar.home")}
                     </NavLink>
 
                     <NavLink
@@ -33,7 +36,7 @@ function Header() {
                                 : "text-slate-200 no-underline transition hover:text-blue-400"
                         }
                     >
-                        Favoritos
+                        {t("navbar.favorites")}
                     </NavLink>
 
                     <LanguageSelector />
