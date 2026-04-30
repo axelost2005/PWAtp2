@@ -11,7 +11,7 @@ export const getTeams = async (page = 1, limit = 8) => {
     const response = await fetch(`${BASE_URL}/equipos?page=${page}&limit=${limit}`);
 
     if (!response.ok) {
-        throw new Error("Error al obtener los equipos");
+        throw new Error("GET_TEAMS_ERROR");
     }
 
     const data = await response.json();
@@ -23,7 +23,7 @@ export const getTeamById = async (id) => {
     const response = await fetch(`${BASE_URL}/equipos`);
 
     if (!response.ok) {
-        throw new Error("Error al obtener los equipos");
+        throw new Error("GET_TEAMS_ERROR");
     }
 
     const data = await response.json();
@@ -32,7 +32,7 @@ export const getTeamById = async (id) => {
     const team = teams.find((team) => team.id === String(id));
 
     if (!team) {
-        throw new Error("Equipo no encontrado");
+        throw new Error("TEAM_NOT_FOUND");
     }
 
     return team;
@@ -44,7 +44,7 @@ export const searchTeams = async (searchValue, page = 1, limit = 8) => {
     );
 
     if (!response.ok) {
-        throw new Error("Error al buscar equipos");
+        throw new Error("SEARCH_TEAMS_ERROR");
     }
 
     const data = await response.json();

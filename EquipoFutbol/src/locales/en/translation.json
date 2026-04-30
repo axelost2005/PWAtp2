@@ -1,12 +1,51 @@
 {
-    "home": {
-        "title":"Football Teams"
-    },
-    "profile": {
-        "title":"Profile"
+    "app": {
+        "name": "Football Teams"
     },
     "navbar": {
         "home": "Home",
         "favorites": "Favorites"
+    },
+    "common": {
+        "backHome": "Back to home"
+    },
+    "home": {
+        "title": "Football teams",
+        "description": "Explore Argentine football teams, learn about their stadiums, history, coaches, and save your favorites.",
+        "loading": "Loading teams...",
+        "error": "Teams could not be loaded.",
+        "empty": "There are no teams to display."
+    },
+    "teamCard": {
+        "logoAlt": "{{teamName}} badge",
+        "league": "League",
+        "stadium": "Stadium",
+        "titles": "Titles",
+        "viewDetail": "View details"
+    },
+    "details": {
+        "loading": "Loading team details...",
+        "title": "Team details",
+        "notFoundTitle": "Team not found",
+        "notFoundDescription": "There is no team loaded with that ID.",
+        "country": "Country",
+        "founded": "Founded",
+        "coach": "Coach"
+    },
+    "favorites": {
+        "title": "Favorites",
+        "description": "The user's favorite teams will be displayed here."
+    },
+    "notFound": {
+        "description": "The page you are looking for does not exist."
+    },
+    "footer": {
+        "description": "A fictional platform to explore football teams, learn their main information, and save favorites.",
+        "contact": "Contact",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "socialMedia": "Social media",
+        "rights": "© 2026 Football Teams. All rights reserved."
     }
 }

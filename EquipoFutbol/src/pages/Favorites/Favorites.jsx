@@ -1,9 +1,16 @@
+import { useTranslation } from "react-i18next";
+
 function Favorites() {
+    const { t } = useTranslation();
+
     return (
         <section>
-            <h1 className="mb-4 text-3xl font-bold">Favoritos</h1>
+            <h1 className="mb-4 text-3xl font-bold">
+                {t("favorites.title")}
+            </h1>
+
             <p className="text-slate-700">
-                Acá se mostrarán los equipos favoritos del usuario.
+                {t("favorites.description")}
             </p>
         </section>
     );
