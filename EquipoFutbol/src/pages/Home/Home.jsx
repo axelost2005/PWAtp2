@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TeamCard from "../../components/TeamCard/TeamCard";
 import { getTeams } from "../../services/teamsService";
+import { searchTeams } from "../../services/teamsService";
+import { Filter } from "../../components/Filter/Filter";
 
 function Home() {
     const { t } = useTranslation();
@@ -9,14 +11,14 @@ function Home() {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         const loadTeams = async () => {
             try {
                 setLoading(true);
                 setError("");
-
-                const data = await getTeams(1, 20);
+                const data = await searchTeams(search, 1, 20);
                 setTeams(data);
             } catch (error) {
                 setError(t("home.error"));
@@ -26,18 +28,22 @@ function Home() {
         };
 
         loadTeams();
-    }, [t]);
-
+    }, [search,t]);
     return (
         <section>
             <div className="mb-8">
-                <h1 className="mb-4 text-3xl font-bold text-slate-950">
-                    {t("home.title")}
-                </h1>
+                <div className="flex items-center justify-between">
+                    <h1 className="mb-4 text-3xl font-bold text-slate-950">
+                        {t("home.title")}
+                    </h1>
+                    <Filter search={search} setSearch={setSearch}/>
+                </div>
+                
 
                 <p className="max-w-2xl text-slate-700">
                     {t("home.description")}
                 </p>
+                
             </div>
 
             {loading && (
