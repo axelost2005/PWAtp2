@@ -1,21 +1,13 @@
 const FAVORITES_KEY = "favoriteTeams";
 
-export const getFavoriteTeams =  ({ search = "" } = {}) =>  {
-    const response = localStorage.getItem(FAVORITES_KEY);
+export const getFavoriteTeams = () => {
+    const favorites = localStorage.getItem(FAVORITES_KEY);
 
-    if (!response) {
+    if (!favorites) {
         return [];
     }
 
-    const favorites = JSON.parse(response);
-
-    if (!search) {
-        return favorites;
-    }
-
-    return favorites.filter(team =>
-        team.name.toLowerCase().includes(search.toLowerCase())
-    );
+    return JSON.parse(favorites);
 };
 
 export const saveFavoriteTeams = (favorites) => {

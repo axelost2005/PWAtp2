@@ -11,8 +11,8 @@ function Favorites() {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        setFavoriteTeams(getFavoriteTeams({ search }));
-    }, [search]);
+        setFavoriteTeams(getFavoriteTeams());
+    }, []);
 
     const handleFavoriteChange = (updatedFavorites) => {
         setFavoriteTeams(updatedFavorites);
@@ -24,7 +24,6 @@ function Favorites() {
                 <h1 className="mb-4 text-3xl font-bold">
                     {t("favorites.title")}
                 </h1>
-                <Filter search={search} setSearch={setSearch}/>
             </div>
             
 
