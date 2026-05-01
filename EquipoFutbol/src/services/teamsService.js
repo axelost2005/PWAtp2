@@ -42,10 +42,13 @@ export const searchTeams = async (searchValue = "", page = 1, limit = 8) => {
     const response = await fetch(
         `${BASE_URL}/equipos?name=${searchValue}&page=${page}&limit=${limit}`
     );
-
+    if (response.status === 404) {
+        return []; // 👈 esto evita que caiga en catch
+    }
     if (!response.ok) {
         throw new Error("SEARCH_TEAMS_ERROR");
     }
+    
 
     const data = await response.json();
 
