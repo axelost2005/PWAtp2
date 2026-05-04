@@ -10,11 +10,15 @@
         "backHome": "Volver al inicio"
     },
     "home": {
-        "title": "Equipos de fútbol",
-        "description": "Explorá equipos del fútbol argentino, conocé sus estadios, historia, entrenadores y guardá tus favoritos.",
-        "loading": "Cargando equipos...",
-        "error": "No se pudieron cargar los equipos.",
-        "empty": "No hay equipos para mostrar."
+    "title": "Equipos de fútbol",
+    "description": "Explorá equipos del fútbol argentino, conocé sus estadios, historia, entrenadores y guardá tus favoritos.",
+    "loading": "Cargando equipos...",
+    "searching": "Buscando equipos...",
+    "error": "No se pudieron cargar los equipos.",
+    "empty": "No hay equipos para mostrar.",
+    "noResults": "No se encontraron equipos con esa búsqueda.",
+    "searchPlaceholder": "Buscar por nombre de equipo...",
+    "searchLabel": "Buscar equipo"
     },
     "teamCard": {
     "logoAlt": "Escudo de {{teamName}}",

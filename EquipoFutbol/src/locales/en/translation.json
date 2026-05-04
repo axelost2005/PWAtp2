@@ -10,11 +10,15 @@
         "backHome": "Back to home"
     },
     "home": {
-        "title": "Football teams",
-        "description": "Explore Argentine football teams, learn about their stadiums, history, coaches, and save your favorites.",
-        "loading": "Loading teams...",
-        "error": "Teams could not be loaded.",
-        "empty": "There are no teams to display."
+    "title": "Football teams",
+    "description": "Explore Argentine football teams, learn about their stadiums, history, coaches, and save your favorites.",
+    "loading": "Loading teams...",
+    "searching": "Searching teams...",
+    "error": "Teams could not be loaded.",
+    "empty": "There are no teams to display.",
+    "noResults": "No teams found for that search.",
+    "searchPlaceholder": "Search by team name...",
+    "searchLabel": "Search team"
     },
     "teamCard": {
     "logoAlt": "{{teamName}} badge",
