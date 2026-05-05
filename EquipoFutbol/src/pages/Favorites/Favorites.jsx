@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TeamCard from "../../components/TeamCard/TeamCard";
 import { getFavoriteTeams } from "../../services/localStorage";
-import { Filter } from "../../components/Filter/Filter";
 
 function Favorites() {
     const { t } = useTranslation();
