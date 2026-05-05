@@ -30,12 +30,15 @@ La aplicación se estructura en 4 páginas principales, todas compartiendo un **
     * **Home/Inicio:** Acceso directo a la pantalla principal.
     * **Favorites/Favoritos:** Acceso a la lista de favoritos del usuario.
     * **Selector En/Es:** Control de idioma mediante el componente `LanguageSelector.jsx`.
+<img width="955" height="110" alt="image" src="https://github.com/user-attachments/assets/069a28ff-2802-48ff-9105-c0fb479f4e6e" />
 
 ## Footer
 * **Footer.jsx:** sección ubicada al final de todas las páginas que incluye:
     * Una breve descripción de la aplicación  
     * Información de contacto: teléfono, email y ubicación  
-    * Enlaces a redes sociales  
+    * Enlaces a redes sociales
+
+<img width="1792" height="330" alt="image" src="https://github.com/user-attachments/assets/47c2b7fe-5be3-47a3-b92f-7ad3accf1e60" />
 
 ### Home (Página Principal)
 Es la puerta de entrada y presentación de la app.
@@ -58,6 +61,8 @@ Esta página gestiona la persistencia mediante **LocalStorage**.
 Si el usuario intenta acceder a una ruta inexistente (ej: `/desarrollo`), la app captura el error y muestra esta página especializada.
 *   Informa sobre el error 404 de página inexistente.
 *   Ofrece un botón de acción rápida para regresar a la página de inicio de forma segura.
+
+<img width="800" height="414" alt="image" src="https://github.com/user-attachments/assets/cb41444b-98b1-4e58-9a1d-87225d5a0adf" />
 
 ---
 
