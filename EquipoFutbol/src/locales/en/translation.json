@@ -18,7 +18,9 @@
     "empty": "There are no teams to display.",
     "noResults": "No teams found for that search.",
     "searchPlaceholder": "Search by team name...",
-    "searchLabel": "Search team"
+    "searchLabel": "Search team",
+    "loadingMore": "Loading more teams...",
+    "noMore": "There are no more teams to show."
     },
     "teamCard": {
     "logoAlt": "{{teamName}} badge",

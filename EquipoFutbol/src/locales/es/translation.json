@@ -18,7 +18,9 @@
     "empty": "No hay equipos para mostrar.",
     "noResults": "No se encontraron equipos con esa búsqueda.",
     "searchPlaceholder": "Buscar por nombre de equipo...",
-    "searchLabel": "Buscar equipo"
+    "searchLabel": "Buscar equipo",
+    "loadingMore": "Cargando más equipos...",
+    "noMore": "No hay más equipos para mostrar."
     },
     "teamCard": {
     "logoAlt": "Escudo de {{teamName}}",
@@ -55,4 +57,5 @@
         "socialMedia": "Redes sociales",
         "rights": "© 2026 EquipoFútbol. Todos los derechos reservados."
     }
+    
 }
