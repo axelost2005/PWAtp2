@@ -9,37 +9,73 @@ function Home() {
 
     const [teams, setTeams] = useState([]);
     const [searchValue, setSearchValue] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const limit = 8;
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            const loadTeams = async () => {
-                try {
-                    setLoading(true);
-                    setError("");
-
-                    const cleanSearchValue = searchValue.trim();
-
-                    const data = cleanSearchValue
-                        ? await searchTeams(cleanSearchValue, 1, 20)
-                        : await getTeams(1, 20);
-
-                    setTeams(data);
-                } catch (error) {
-                    setError(t("home.error"));
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            loadTeams();
+            setTeams([]);
+            setPage(1);
+            setHasMore(true);
+            setDebouncedSearchValue(searchValue.trim());
         }, 400);
 
         return () => clearTimeout(timeoutId);
-    }, [searchValue, t]);
+    }, [searchValue]);
 
-    const hasSearchValue = searchValue.trim().length > 0;
+    useEffect(() => {
+        const loadTeams = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const data = debouncedSearchValue
+                    ? await searchTeams(debouncedSearchValue, page, limit)
+                    : await getTeams(page, limit);
+
+                if (page === 1) {
+                    setTeams(data);
+                } else {
+                    setTeams((prevTeams) => [...prevTeams, ...data]);
+                }
+
+                setHasMore(data.length === limit);
+            } catch (error) {
+                setError(t("home.error"));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadTeams();
+    }, [page, debouncedSearchValue, t]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const pageHeight = document.documentElement.scrollHeight;
+            const isNearBottom = scrollPosition >= pageHeight - 250;
+
+            if (isNearBottom && hasMore && !loading) {
+                setPage((prevPage) => prevPage + 1);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [hasMore, loading]);
+
+    const hasSearchValue = debouncedSearchValue.length > 0;
+    const isFirstLoad = loading && page === 1;
+    const isLoadingMore = loading && page > 1;
 
     return (
         <section>
@@ -60,7 +96,7 @@ function Home() {
                 placeholder={t("home.searchPlaceholder")}
             />
 
-            {loading && (
+            {isFirstLoad && (
                 <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
                     {hasSearchValue ? t("home.searching") : t("home.loading")}
                 </p>
@@ -78,18 +114,24 @@ function Home() {
                 </p>
             )}
 
-            {!loading && !error && teams.length > 0 && (
+            {!error && teams.length > 0 && (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {teams.map((team, index) => (
-                        <TeamCard
-                            key={team.id || index + 1}
-                            team={{
-                                ...team,
-                                id: team.id || String(index + 1),
-                            }}
-                        />
+                    {teams.map((team) => (
+                        <TeamCard key={team.id} team={team} />
                     ))}
                 </div>
+            )}
+
+            {isLoadingMore && (
+                <p className="mt-6 text-center text-slate-600">
+                    {t("home.loadingMore")}
+                </p>
+            )}
+
+            {!loading && !hasMore && teams.length > 0 && (
+                <p className="mt-6 text-center text-slate-500">
+                    {t("home.noMore")}
+                </p>
             )}
         </section>
     );

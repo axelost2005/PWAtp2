@@ -1,9 +1,9 @@
 const BASE_URL = "https://69f3549dbd2396bf530fccd6.mockapi.io/api/v1";
 
-const normalizeTeams = (teams) => {
+const normalizeTeams = (teams, page = 1, limit = 8) => {
     return teams.map((team, index) => ({
         ...team,
-        id: team.id || String(index + 1),
+        id: team.id || String((page - 1) * limit + index + 1),
     }));
 };
 
@@ -16,7 +16,7 @@ export const getTeams = async (page = 1, limit = 8) => {
 
     const data = await response.json();
 
-    return normalizeTeams(data);
+    return normalizeTeams(data, page, limit);
 };
 
 export const getTeamById = async (id) => {
@@ -51,5 +51,5 @@ export const searchTeams = async (searchValue, page = 1, limit = 8) => {
 
     const data = await response.json();
 
-    return normalizeTeams(data);
+    return normalizeTeams(data, page, limit);
 };
