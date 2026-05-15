@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
@@ -7,4 +7,9 @@ export default defineConfig({
         react(),
         tailwindcss(),
     ],
+    test: {
+        environment: 'jsdom',
+        setupFiles: './src/test/setup.js',
+        globals: true,
+    },
 })
