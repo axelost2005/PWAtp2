@@ -20,7 +20,13 @@
     "searchPlaceholder": "Search by team name...",
     "searchLabel": "Search team",
     "loadingMore": "Loading more teams...",
-    "noMore": "There are no more teams to show."
+    "noMore": "There are no more teams to show.",
+    "allTeams": "All teams"
+    },
+    "hero": {
+        "prevTeam": "Previous team",
+        "nextTeam": "Next team",
+        "goToTeam": "View {{teamName}}"
     },
     "teamCard": {
     "logoAlt": "{{teamName}} badge",

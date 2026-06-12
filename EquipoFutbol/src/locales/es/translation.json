@@ -20,7 +20,13 @@
     "searchPlaceholder": "Buscar por nombre de equipo...",
     "searchLabel": "Buscar equipo",
     "loadingMore": "Cargando más equipos...",
-    "noMore": "No hay más equipos para mostrar."
+    "noMore": "No hay más equipos para mostrar.",
+    "allTeams": "Todos los equipos"
+    },
+    "hero": {
+        "prevTeam": "Equipo anterior",
+        "nextTeam": "Siguiente equipo",
+        "goToTeam": "Ver {{teamName}}"
     },
     "teamCard": {
     "logoAlt": "Escudo de {{teamName}}",
