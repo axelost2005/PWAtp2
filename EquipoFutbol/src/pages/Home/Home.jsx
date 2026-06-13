@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import TeamCard from "../../components/TeamCard/TeamCard";
 import SearchInput from "../../components/SearchInput/SearchInput";
@@ -19,7 +19,7 @@ function Home() {
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
-            setTeams([]);
+            //setTeams([]);
             setPage(1);
             setHasMore(true);
             setDebouncedSearchValue(searchValue.trim());
@@ -30,6 +30,7 @@ function Home() {
 
     useEffect(() => {
         const loadTeams = async () => {
+            
             try {
                 setLoading(true);
                 setError("");
@@ -37,7 +38,6 @@ function Home() {
                 const data = debouncedSearchValue
                     ? await searchTeams(debouncedSearchValue, page, limit)
                     : await getTeams(page, limit);
-
                 if (page === 1) {
                     setTeams(data);
                 } else {
@@ -76,7 +76,6 @@ function Home() {
     const hasSearchValue = debouncedSearchValue.length > 0;
     const isFirstLoad = loading && page === 1;
     const isLoadingMore = loading && page > 1;
-
     return (
         <section>
             <div className="mb-8">

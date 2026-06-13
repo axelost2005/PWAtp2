@@ -1,11 +1,4 @@
-const BASE_URL = "https://69f3549dbd2396bf530fccd6.mockapi.io/api/v1";
-
-const normalizeTeams = (teams, page = 1, limit = 8) => {
-    return teams.map((team, index) => ({
-        ...team,
-        id: team.id || String((page - 1) * limit + index + 1),
-    }));
-};
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getTeams = async (page = 1, limit = 8) => {
     const response = await fetch(`${BASE_URL}/equipos?page=${page}&limit=${limit}`);
@@ -16,26 +9,20 @@ export const getTeams = async (page = 1, limit = 8) => {
 
     const data = await response.json();
 
-    return normalizeTeams(data, page, limit);
+    return data;
 };
 
 export const getTeamById = async (id) => {
-    const response = await fetch(`${BASE_URL}/equipos`);
+    const response = await fetch(`${BASE_URL}/equipos/${id}`);
 
     if (!response.ok) {
-        throw new Error("GET_TEAMS_ERROR");
+        if (response.status === 404) {
+            throw new Error("TEAM_NOT_FOUND");
+        }
+        throw new Error("GET_TEAM_ERROR");
     }
 
-    const data = await response.json();
-    const teams = normalizeTeams(data);
-
-    const team = teams.find((team) => team.id === String(id));
-
-    if (!team) {
-        throw new Error("TEAM_NOT_FOUND");
-    }
-
-    return team;
+    return await response.json();
 };
 
 export const searchTeams = async (searchValue, page = 1, limit = 8) => {
@@ -51,5 +38,5 @@ export const searchTeams = async (searchValue, page = 1, limit = 8) => {
 
     const data = await response.json();
 
-    return normalizeTeams(data, page, limit);
+    return data;
 };
