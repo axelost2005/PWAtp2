@@ -17,10 +17,10 @@ function LanguageSelector() {
         <select
             value={currentLanguage}
             onChange={handleChangeLanguage}
-            className="rounded-md bg-slate-800 px-3 py-2 text-sm text-white outline-none transition hover:bg-slate-700"
+            className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-sm font-medium text-white outline-none transition hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/30"
         >
-            <option value="es">ES</option>
-            <option value="en">EN</option>
+            <option value="es" className="text-slate-900">ES</option>
+            <option value="en" className="text-slate-900">EN</option>
         </select>
     );
 }
