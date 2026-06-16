@@ -88,7 +88,9 @@ function Home() {
             const pageHeight = document.documentElement.scrollHeight;
             const isNearBottom = scrollPosition >= pageHeight - 250;
 
-            if (isNearBottom && hasMore && !loading) {
+            // No pedimos más páginas si hay un error activo: evita el loop de
+            // llamadas que vuelven a fallar mientras el usuario sigue scrolleando.
+            if (isNearBottom && hasMore && !loading && !errorKey) {
                 setPage((prevPage) => prevPage + 1);
             }
         };
@@ -98,7 +100,7 @@ function Home() {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [hasMore, loading]);
+    }, [hasMore, loading, errorKey]);
 
     const hasSearchValue = debouncedSearchValue.length > 0;
     const isFirstLoad = loading && page === 1;

@@ -35,8 +35,11 @@ function Details() {
     // Estado para saber si la página está cargando.
     const [loading, setLoading] = useState(true);
 
-    // Estado para saber si hubo error o si el equipo no existe.
+    // Estado para saber si hubo un error de API al cargar el equipo (server caído, 500, etc.).
     const [error, setError] = useState(false);
+
+    // Estado para saber si el equipo no existe (respuesta 404 del backend).
+    const [notFound, setNotFound] = useState(false);
 
     // Detectamos el idioma actual.
     // Si viene "es-AR" o "en-US", nos quedamos solo con "es" o "en".
@@ -51,18 +54,23 @@ function Details() {
     useEffect(() => {
         const loadTeam = async () => {
             try {
-                // Antes de pedir datos, activamos loading y limpiamos errores previos.
+                // Antes de pedir datos, activamos loading y limpiamos estados previos.
                 setLoading(true);
                 setError(false);
+                setNotFound(false);
 
                 // Pedimos el equipo por ID usando el servicio.
                 const data = await getTeamById(id);
 
                 // Guardamos el equipo recibido en el estado.
                 setTeam(data);
-            } catch (error) {
-                // Si falla el fetch o no existe el equipo, activamos error.
-                setError(true);
+            } catch (err) {
+                // El service distingue 404 (equipo inexistente) de cualquier otra falla de API.
+                if (err.message === "TEAM_NOT_FOUND") {
+                    setNotFound(true);
+                } else {
+                    setError(true);
+                }
             } finally {
                 // Pase lo que pase, dejamos de mostrar el estado de carga.
                 setLoading(false);
@@ -84,9 +92,35 @@ function Details() {
         );
     }
 
-    // Estado de error / 404:
-    // Si hubo error o no se pudo traducir/cargar el equipo, mostramos una pantalla de no encontrado.
-    if (error || !translatedTeam) {
+    // Estado de error de API:
+    // Si la llamada al backend falló (server caído, 500, etc.), mostramos un mensaje de error,
+    // distinto del "no encontrado" porque el equipo podría existir igual.
+    if (error) {
+        return (
+            <section className="mx-auto w-full max-w-6xl px-4 py-12">
+                <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-8">
+                    <h1 className="mb-4 font-display text-3xl uppercase tracking-wide text-white">
+                        {t("details.errorTitle")}
+                    </h1>
+
+                    <p className="mb-6 text-slate-300">
+                        {t("details.errorDescription")}
+                    </p>
+
+                    <Link
+                        to="/"
+                        className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 font-semibold text-slate-950 no-underline transition hover:bg-slate-200"
+                    >
+                        {t("common.backHome")}
+                    </Link>
+                </div>
+            </section>
+        );
+    }
+
+    // Estado 404 / sin datos:
+    // Si el equipo no existe (404) o no hay datos para mostrar, mostramos la pantalla de no encontrado.
+    if (notFound || !translatedTeam) {
         return (
             <section className="mx-auto w-full max-w-6xl px-4 py-12">
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-8">

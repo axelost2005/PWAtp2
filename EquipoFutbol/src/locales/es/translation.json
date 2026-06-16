@@ -42,6 +42,8 @@
         "title": "Detalle del equipo",
         "notFoundTitle": "Equipo no encontrado",
         "notFoundDescription": "No existe un equipo cargado con ese ID.",
+        "errorTitle": "Error al cargar el equipo",
+        "errorDescription": "Hubo un problema al conectar con el servidor. Probá de nuevo en unos minutos.",
         "country": "País",
         "founded": "Fundación",
         "coach": "Entrenador"

@@ -42,6 +42,8 @@
         "title": "Team details",
         "notFoundTitle": "Team not found",
         "notFoundDescription": "There is no team loaded with that ID.",
+        "errorTitle": "Error loading the team",
+        "errorDescription": "There was a problem connecting to the server. Please try again in a few minutes.",
         "country": "Country",
         "founded": "Founded",
         "coach": "Coach"
