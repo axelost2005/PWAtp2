@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import TeamBadge3D from "../TeamBadge3D/TeamBadge3D";
 import { getTranslatedTeam } from "../../utils/teamTranslations";
 import { getTeamColors } from "../../utils/teamColors";
-import { isFavoriteTeam, toggleFavoriteTeam } from "../../services/localStorage";
+import { useAuth } from "../../context/AuthContext";
+import { useFavorites } from "../../context/FavoritesContext";
 
 // Duración de la transición del carrusel. Mientras corre, la navegación queda
 // bloqueada para evitar estados intermedios rotos.
@@ -26,12 +27,14 @@ function HeroCarousel({ teams }) {
     const { t, i18n } = useTranslation();
     const currentLanguage = (i18n.resolvedLanguage || i18n.language || "es").split("-")[0];
 
+    const { isAuthenticated } = useAuth();
+    const { isFavorite, toggleFavorite } = useFavorites();
+
     const carouselTeams = teams.slice(0, MAX_CAROUSEL_TEAMS);
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [isFavorite, setIsFavorite] = useState(false);
 
     const animationTimeoutRef = useRef(null);
 
@@ -71,18 +74,8 @@ function HeroCarousel({ teams }) {
     const activeTeam = carouselTeams[safeIndex];
     const activeTeamId = activeTeam?.id;
 
-    // El estado de favorito se sincroniza con localStorage y con el evento
-    // "favorites-updated" que también disparan las cards del listado.
-    useEffect(() => {
-        if (!activeTeamId) return;
-
-        const syncFavorite = () => setIsFavorite(isFavoriteTeam(activeTeamId));
-
-        syncFavorite();
-        window.addEventListener("favorites-updated", syncFavorite);
-
-        return () => window.removeEventListener("favorites-updated", syncFavorite);
-    }, [activeTeamId]);
+    // El estado de favorito sale del context (sincronizado con la API).
+    const favorite = isAuthenticated && activeTeamId ? isFavorite(activeTeamId) : false;
 
     if (!activeTeam) {
         return null;
@@ -122,8 +115,7 @@ function HeroCarousel({ teams }) {
     };
 
     const handleFavoriteClick = () => {
-        toggleFavoriteTeam(activeTeam);
-        window.dispatchEvent(new Event("favorites-updated"));
+        toggleFavorite(activeTeam);
     };
 
     // Rol de cada card según su distancia al equipo activo.
@@ -347,22 +339,24 @@ function HeroCarousel({ teams }) {
                 </p>
 
                 <div className="mt-6 flex items-center justify-center gap-3">
-                    <button
-                        type="button"
-                        onClick={handleFavoriteClick}
-                        aria-label={
-                            isFavorite
-                                ? t("teamCard.removeFavorite")
-                                : t("teamCard.addFavorite")
-                        }
-                        className={`flex h-12 w-12 items-center justify-center rounded-full border text-xl transition hover:scale-110 ${
-                            isFavorite
-                                ? "border-transparent bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
-                                : "border-white/25 bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-red-400"
-                        }`}
-                    >
-                        {isFavorite ? "♥" : "♡"}
-                    </button>
+                    {isAuthenticated && (
+                        <button
+                            type="button"
+                            onClick={handleFavoriteClick}
+                            aria-label={
+                                favorite
+                                    ? t("teamCard.removeFavorite")
+                                    : t("teamCard.addFavorite")
+                            }
+                            className={`flex h-12 w-12 items-center justify-center rounded-full border text-xl transition hover:scale-110 ${
+                                favorite
+                                    ? "border-transparent bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
+                                    : "border-white/25 bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-red-400"
+                            }`}
+                        >
+                            {favorite ? "♥" : "♡"}
+                        </button>
+                    )}
 
                     <Link
                         to={`/equipos/${activeTeam.id}`}
