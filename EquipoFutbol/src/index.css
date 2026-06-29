@@ -1,1 +1,67 @@
 @import "tailwindcss";
+
+/*
+    Tokens de diseño (Tailwind v4).
+    --font-sans pisa la fuente base con Inter.
+    --font-display genera la utilidad font-display (Anton) para títulos grandes.
+    --color-pitch-* es el fondo "estadio de noche" de toda la app.
+    --ease-carousel genera la utilidad ease-carousel para el carrusel del hero.
+*/
+@theme {
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-display: "Anton", "Arial Narrow", ui-sans-serif, sans-serif;
+
+    --color-pitch-900: #0b1322;
+    --color-pitch-950: #060a13;
+
+    --ease-carousel: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --animate-float: float 7s ease-in-out infinite;
+    --animate-rise: rise 550ms var(--ease-carousel) both;
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-12px);
+        }
+    }
+
+    @keyframes rise {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        /* Clipea cualquier desborde horizontal transitorio (animaciones,
+           carga de fuentes) sin crear un scroll container. */
+        overflow-x: clip;
+    }
+
+    body {
+        background-color: var(--color-pitch-950);
+    }
+}
+
+/* Accesibilidad: si el usuario pide menos movimiento, las animaciones
+   y transiciones pasan a ser prácticamente instantáneas. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

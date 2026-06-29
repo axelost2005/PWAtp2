@@ -4,10 +4,40 @@
     },
     "navbar": {
         "home": "Home",
-        "favorites": "Favorites"
+        "favorites": "Favorites",
+        "login": "Log in",
+        "register": "Sign up",
+        "greeting": "Hi, {{name}}"
     },
     "common": {
         "backHome": "Back to home"
+    },
+    "auth": {
+        "fields": {
+            "name": "Name",
+            "email": "Email",
+            "password": "Password"
+        },
+        "login": {
+            "title": "Log in",
+            "submit": "Sign in",
+            "submitting": "Signing in...",
+            "noAccount": "Don't have an account?",
+            "registerLink": "Sign up"
+        },
+        "register": {
+            "title": "Create account",
+            "submit": "Sign up",
+            "submitting": "Signing up...",
+            "success": "Account created! Redirecting to login...",
+            "haveAccount": "Already have an account?",
+            "loginLink": "Log in"
+        },
+        "validation": {
+            "nameRequired": "Name is required.",
+            "emailInvalid": "Enter a valid email.",
+            "passwordMin": "Password must be at least {{min}} characters."
+        }
     },
     "home": {
     "title": "Football teams",
@@ -20,7 +50,13 @@
     "searchPlaceholder": "Search by team name...",
     "searchLabel": "Search team",
     "loadingMore": "Loading more teams...",
-    "noMore": "There are no more teams to show."
+    "noMore": "There are no more teams to show.",
+    "allTeams": "All teams"
+    },
+    "hero": {
+        "prevTeam": "Previous team",
+        "nextTeam": "Next team",
+        "goToTeam": "View {{teamName}}"
     },
     "teamCard": {
     "logoAlt": "{{teamName}} badge",
@@ -36,6 +72,8 @@
         "title": "Team details",
         "notFoundTitle": "Team not found",
         "notFoundDescription": "There is no team loaded with that ID.",
+        "errorTitle": "Error loading the team",
+        "errorDescription": "There was a problem connecting to the server. Please try again in a few minutes.",
         "country": "Country",
         "founded": "Founded",
         "coach": "Coach"

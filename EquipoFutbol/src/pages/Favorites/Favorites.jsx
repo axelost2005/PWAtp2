@@ -18,25 +18,22 @@ function Favorites() {
     };
 
     return (
-        <section>
-            <div  className="flex items-center justify-between">
-                <h1 className="mb-4 text-3xl font-bold">
-                    {t("favorites.title")}
-                </h1>
-            </div>
-            
+        <section className="mx-auto w-full max-w-6xl px-4 py-12">
+            <h1 className="mb-3 font-display text-3xl uppercase tracking-wide text-white sm:text-4xl">
+                {t("favorites.title")}
+            </h1>
 
             {favoriteTeams.length === 0 ? (
-                <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
                     {t("favorites.empty")}
                 </p>
             ) : (
                 <>
-                    <p className="mb-6 text-slate-700">
+                    <p className="mb-8 max-w-2xl text-slate-400">
                         {t("favorites.description")}
                     </p>
 
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         {favoriteTeams.map((team) => (
                             <TeamCard
                                 key={team.id}

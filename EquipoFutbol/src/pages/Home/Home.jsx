@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TeamCard from "../../components/TeamCard/TeamCard";
 import SearchInput from "../../components/SearchInput/SearchInput";
+import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
 import { getTeams, searchTeams } from "../../services/teamsService";
 
 function Home() {
@@ -87,7 +88,9 @@ function Home() {
             const pageHeight = document.documentElement.scrollHeight;
             const isNearBottom = scrollPosition >= pageHeight - 250;
 
-            if (isNearBottom && hasMore && !loading) {
+            // No pedimos más páginas si hay un error activo: evita el loop de
+            // llamadas que vuelven a fallar mientras el usuario sigue scrolleando.
+            if (isNearBottom && hasMore && !loading && !errorKey) {
                 setPage((prevPage) => prevPage + 1);
             }
         };
@@ -97,69 +100,77 @@ function Home() {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, [hasMore, loading]);
+    }, [hasMore, loading, errorKey]);
 
     const hasSearchValue = debouncedSearchValue.length > 0;
     const isFirstLoad = loading && page === 1;
     const isLoadingMore = loading && page > 1;
+    const showHero = !errorKey && teams.length > 0;
 
     return (
-        <section>
-            <div className="mb-8">
-                <h1 className="mb-4 text-3xl font-bold text-slate-950">
-                    {t("home.title")}
-                </h1>
+        <>
+            {/* Título accesible de la página: el protagonismo visual lo tiene el hero */}
+            <h1 className="sr-only">{t("home.title")}</h1>
 
-                <p className="max-w-2xl text-slate-700">
-                    {t("home.description")}
-                </p>
-            </div>
+            {showHero && <HeroCarousel teams={teams} />}
 
-            <SearchInput
-                value={searchValue}
-                onChange={setSearchValue}
-                label={t("home.searchLabel")}
-                placeholder={t("home.searchPlaceholder")}
-            />
+            <section className="mx-auto w-full max-w-6xl px-4 py-14">
+                <div className="mb-8 sm:mb-10">
+                    <h2 className="mb-2 font-display text-3xl uppercase tracking-wide text-white sm:text-4xl">
+                        {t("home.allTeams")}
+                    </h2>
 
-            {isFirstLoad && (
-                <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
-                    {hasSearchValue ? t("home.searching") : t("home.loading")}
-                </p>
-            )}
-
-            {errorKey && (
-                <p className="rounded-xl bg-red-100 p-4 text-red-700 shadow">
-                    {t(errorKey)}
-                </p>
-            )}
-
-            {!loading && !errorKey && teams.length === 0 && (
-                <p className="rounded-xl bg-white p-4 text-slate-700 shadow">
-                    {hasSearchValue ? t("home.noResults") : t("home.empty")}
-                </p>
-            )}
-
-            {!errorKey && teams.length > 0 && (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {teams.map((team) => (
-                        <TeamCard key={team.id} team={team} />
-                    ))}
+                    <p className="max-w-2xl text-slate-400">
+                        {t("home.description")}
+                    </p>
                 </div>
-            )}
 
-            {isLoadingMore && (
-                <p className="mt-6 text-center text-slate-600">
-                    {t("home.loadingMore")}
-                </p>
-            )}
+                <SearchInput
+                    value={searchValue}
+                    onChange={setSearchValue}
+                    label={t("home.searchLabel")}
+                    placeholder={t("home.searchPlaceholder")}
+                />
 
-            {!loading && !hasMore && teams.length > 0 && (
-                <p className="mt-6 text-center text-slate-500">
-                    {t("home.noMore")}
-                </p>
-            )}
-        </section>
+                {isFirstLoad && (
+                    <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
+                        {hasSearchValue ? t("home.searching") : t("home.loading")}
+                    </p>
+                )}
+
+                {errorKey && (
+                    <p className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-red-200">
+                        {t(errorKey)}
+                    </p>
+                )}
+
+                {!loading && !errorKey && teams.length === 0 && (
+                    <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
+                        {hasSearchValue ? t("home.noResults") : t("home.empty")}
+                    </p>
+                )}
+
+                {!errorKey && teams.length > 0 && (
+                    <div className="grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {teams.map((team) => (
+                            <TeamCard key={team.id} team={team} />
+                        ))}
+                    </div>
+                )}
+
+                {isLoadingMore && (
+                    <p className="mt-8 text-center text-slate-400">
+                        {t("home.loadingMore")}
+                    </p>
+                )}
+
+                {!loading && !hasMore && teams.length > 0 && (
+                    <p className="mt-8 text-center text-slate-500">
+                        {t("home.noMore")}
+                    </p>
+                )}
+            </section>
+        </>
     );
 }
 

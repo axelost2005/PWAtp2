@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTranslatedTeam } from "../../utils/teamTranslations";
+import { getTeamColors } from "../../utils/teamColors";
 import { isFavoriteTeam, toggleFavoriteTeam } from "../../services/localStorage";
 
 function TeamCard({ team, onFavoriteChange }) {
@@ -9,17 +10,26 @@ function TeamCard({ team, onFavoriteChange }) {
 
     const currentLanguage = (i18n.resolvedLanguage || i18n.language || "es").split("-")[0];
     const translatedTeam = getTranslatedTeam(team, currentLanguage);
+    const colors = getTeamColors(team.name);
 
     const [isFavorite, setIsFavorite] = useState(false);
 
+    // Sincroniza el corazón con localStorage y con el evento "favorites-updated"
+    // que dispara el hero, para que ambos corazones muestren siempre lo mismo.
     useEffect(() => {
-        setIsFavorite(isFavoriteTeam(team.id));
+        const syncFavorite = () => setIsFavorite(isFavoriteTeam(team.id));
+
+        syncFavorite();
+        window.addEventListener("favorites-updated", syncFavorite);
+
+        return () => window.removeEventListener("favorites-updated", syncFavorite);
     }, [team.id]);
 
     const handleFavoriteClick = () => {
         const updatedFavorites = toggleFavoriteTeam(team);
 
         setIsFavorite(isFavoriteTeam(team.id));
+        window.dispatchEvent(new Event("favorites-updated"));
 
         if (onFavoriteChange) {
             onFavoriteChange(updatedFavorites);
@@ -27,15 +37,20 @@ function TeamCard({ team, onFavoriteChange }) {
     };
 
     return (
-        <article className="flex h-[500px] flex-col overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl">
-            <div className="relative flex h-44 shrink-0 items-center justify-center bg-slate-100 p-5">
+        <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] transition duration-300 hover:-translate-y-1.5 hover:border-white/25 hover:bg-white/[0.07] hover:shadow-2xl hover:shadow-black/50">
+            <div
+                className="relative flex h-44 shrink-0 items-center justify-center p-6"
+                style={{
+                    background: `radial-gradient(ellipse 90% 95% at 50% 0%, ${colors.primary}4d, transparent 72%)`,
+                }}
+            >
                 <button
                     type="button"
                     onClick={handleFavoriteClick}
-                    className={`absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-lg shadow transition ${
+                    className={`absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border text-lg transition hover:scale-110 ${
                         isFavorite
-                            ? "bg-red-500 text-white hover:bg-red-600"
-                            : "bg-white text-slate-500 hover:bg-red-50 hover:text-red-500"
+                            ? "border-transparent bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
+                            : "border-white/15 bg-white/10 text-white/80 backdrop-blur-sm hover:bg-white/20 hover:text-red-400"
                     }`}
                     aria-label={
                         isFavorite
@@ -49,40 +64,40 @@ function TeamCard({ team, onFavoriteChange }) {
                 <img
                     src={translatedTeam.logo}
                     alt={t("teamCard.logoAlt", { teamName: translatedTeam.name })}
-                    className="max-h-full max-w-full object-contain"
+                    className="max-h-full max-w-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.5)] transition duration-300 group-hover:scale-105"
                 />
             </div>
 
             <div className="flex flex-1 flex-col p-5">
-                <p className="mb-2 h-4 text-xs font-semibold uppercase tracking-wide text-blue-600">
+                <p className="mb-3 inline-flex w-fit items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-300">
                     {translatedTeam.category}
                 </p>
 
-                <h2 className="mb-2 h-7 overflow-hidden text-xl font-bold leading-7 text-slate-950">
+                <h2 className="mb-2 line-clamp-1 text-xl font-bold text-white">
                     {translatedTeam.name}
                 </h2>
 
-                <p className="mb-4 h-[64px] overflow-hidden text-sm leading-relaxed text-slate-600">
+                <p className="mb-4 line-clamp-3 text-sm leading-relaxed text-slate-400">
                     {translatedTeam.shortDescription}
                 </p>
 
-                <div className="h-[88px] overflow-hidden text-sm text-slate-700">
-                    <p className="h-6 overflow-hidden whitespace-nowrap">
-                        <span className="font-semibold">
+                <div className="mb-5 space-y-1.5 text-sm text-slate-300">
+                    <p className="line-clamp-1">
+                        <span className="font-semibold text-slate-100">
                             {t("teamCard.league")}:
                         </span>{" "}
                         {translatedTeam.league}
                     </p>
 
-                    <p className="h-10 overflow-hidden leading-5">
-                        <span className="font-semibold">
+                    <p className="line-clamp-2">
+                        <span className="font-semibold text-slate-100">
                             {t("teamCard.stadium")}:
                         </span>{" "}
                         {translatedTeam.stadium}
                     </p>
 
-                    <p className="h-6 overflow-hidden whitespace-nowrap">
-                        <span className="font-semibold">
+                    <p className="line-clamp-1">
+                        <span className="font-semibold text-slate-100">
                             {t("teamCard.titles")}:
                         </span>{" "}
                         {translatedTeam.titles}
@@ -91,7 +106,7 @@ function TeamCard({ team, onFavoriteChange }) {
 
                 <Link
                     to={`/equipos/${translatedTeam.id}`}
-                    className="mt-auto inline-flex h-10 w-full items-center justify-center rounded-xl bg-blue-600 px-4 font-semibold text-white no-underline transition hover:bg-blue-700"
+                    className="mt-auto inline-flex h-11 w-full items-center justify-center rounded-xl bg-white font-semibold text-slate-950 no-underline transition hover:bg-slate-200"
                 >
                     {t("teamCard.viewDetail")}
                 </Link>
