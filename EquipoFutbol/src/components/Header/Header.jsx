@@ -1,9 +1,11 @@
 import { Link, NavLink } from "react-router-dom";
 import LanguageSelector from "../LanguageSelector/LanguageSelector";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../context/AuthContext";
 
 function Header() {
     const { t } = useTranslation();
+    const { isAuthenticated, user } = useAuth();
 
     const getNavLinkClassName = ({ isActive }) =>
         isActive
@@ -30,9 +32,27 @@ function Header() {
                         {t("navbar.home")}
                     </NavLink>
 
-                    <NavLink to="/favoritos" className={getNavLinkClassName}>
-                        {t("navbar.favorites")}
-                    </NavLink>
+                    {isAuthenticated && (
+                        <NavLink to="/favoritos" className={getNavLinkClassName}>
+                            {t("navbar.favorites")}
+                        </NavLink>
+                    )}
+
+                    {isAuthenticated ? (
+                        <span className="rounded-full px-3.5 py-1.5 text-sm font-medium text-slate-300">
+                            {t("navbar.greeting", { name: user?.name })}
+                        </span>
+                    ) : (
+                        <>
+                            <NavLink to="/login" className={getNavLinkClassName}>
+                                {t("navbar.login")}
+                            </NavLink>
+
+                            <NavLink to="/registro" className={getNavLinkClassName}>
+                                {t("navbar.register")}
+                            </NavLink>
+                        </>
+                    )}
 
                     <LanguageSelector />
                 </nav>
