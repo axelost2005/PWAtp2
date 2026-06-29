@@ -11,7 +11,11 @@
 // siempre refleja lo que dice el backend.
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { login as loginRequest, getMe } from "../services/authService";
+import {
+    login as loginRequest,
+    getMe,
+    logout as logoutRequest,
+} from "../services/authService";
 
 // Clave bajo la que guardamos el JWT en localStorage.
 const TOKEN_KEY = "token";
@@ -76,8 +80,18 @@ export function AuthProvider({ children }) {
         return data.user;
     };
 
-    // Cierra sesión: limpia token y usuario de localStorage y del estado.
-    const logout = () => {
+    // Cierra sesión: avisa al backend (best-effort) y limpia token y usuario
+    // de localStorage y del estado. Aunque la llamada falle, igual cerramos
+    // la sesión local para no dejar al usuario "logueado" en el cliente.
+    const logout = async () => {
+        try {
+            if (token) {
+                await logoutRequest(token);
+            }
+        } catch {
+            // Ignoramos errores: el cierre local se hace igual.
+        }
+
         localStorage.removeItem(TOKEN_KEY);
         setToken(null);
         setUser(null);

@@ -1,16 +1,23 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import LanguageSelector from "../LanguageSelector/LanguageSelector";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 
 function Header() {
     const { t } = useTranslation();
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, user, logout } = useAuth();
+    const navigate = useNavigate();
 
     const getNavLinkClassName = ({ isActive }) =>
         isActive
             ? "rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-slate-950 no-underline"
             : "rounded-full px-3.5 py-1.5 text-sm font-medium text-slate-300 no-underline transition hover:bg-white/10 hover:text-white";
+
+    // Cierra sesión (avisa al backend + limpia estado) y vuelve al inicio.
+    const handleLogout = async () => {
+        await logout();
+        navigate("/");
+    };
 
     return (
         <header className="sticky top-0 z-50 border-b border-white/10 bg-pitch-950/80 backdrop-blur-md">
@@ -39,9 +46,19 @@ function Header() {
                     )}
 
                     {isAuthenticated ? (
-                        <span className="rounded-full px-3.5 py-1.5 text-sm font-medium text-slate-300">
-                            {t("navbar.greeting", { name: user?.name })}
-                        </span>
+                        <>
+                            <span className="rounded-full px-3.5 py-1.5 text-sm font-medium text-slate-300">
+                                {t("navbar.greeting", { name: user?.name })}
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={handleLogout}
+                                className="rounded-full px-3.5 py-1.5 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+                            >
+                                {t("navbar.logout")}
+                            </button>
+                        </>
                     ) : (
                         <>
                             <NavLink to="/login" className={getNavLinkClassName}>

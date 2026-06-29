@@ -87,3 +87,20 @@ export const getMe = async (token) => {
 
     return await handleResponse(response);
 };
+
+// POST /api/auth/logout
+// Avisa al backend del cierre de sesión enviando el token.
+// El JWT es stateless, así que el cierre real se hace en el cliente
+// borrando el token; esta llamada cumple el contrato del endpoint.
+export const logout = async (token) => {
+    const baseUrl = getApiUrl();
+
+    const response = await fetch(`${baseUrl}/api/auth/logout`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return await handleResponse(response);
+};

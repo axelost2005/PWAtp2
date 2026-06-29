@@ -1,6 +1,6 @@
 # ⚽ EquipoFutbol
 
-Aplicación web desarrollada con **React** que permite explorar equipos de fútbol, visualizar información detallada y guardar favoritos. Tambien nos ofrece navegación entre páginas, búsqueda dinámica, soporte multi-idioma (Español/Inglés) y persistencia de datos mediante LocalStorage.
+Aplicación web desarrollada con **React** que permite explorar equipos de fútbol, visualizar información detallada y guardar favoritos. También ofrece navegación entre páginas, búsqueda dinámica, soporte multi-idioma (Español/Inglés), **autenticación de usuarios con JWT** (registro, login y logout) y **favoritos persistidos por usuario en la base de datos** a través de la API.
 
 ---
 
@@ -16,8 +16,14 @@ Aplicación web desarrollada con **React** que permite explorar equipos de fútb
 ```bash git clone <URL_DEL_REPO>```
 2. Instalar dependencias:
 ```bash npm install```
-3. Ejecutar la aplicación:
+3. Crear un archivo `.env` en `EquipoFutbol/` (tomando `.env.example` como base) con la URL del backend:
+```env
+VITE_API_URL=http://localhost:3000
+```
+4. Ejecutar la aplicación:
 ```bash npm run dev```
+
+> La variable `VITE_API_URL` define a qué backend apunta el frontend. En producción se usa la URL del backend deployado.
 
 ---
 
@@ -26,9 +32,11 @@ Aplicación web desarrollada con **React** que permite explorar equipos de fútb
 La aplicación se estructura en 4 páginas principales, todas compartiendo un **Header** y **Footer** constante para una navegación fluida.
 
 ### Header
-* **Header.jsx:** Barra superior con el logo de la app y tres controles:
+* **Header.jsx:** Barra superior con el logo de la app y controles que dependen de la sesión:
     * **Home/Inicio:** Acceso directo a la pantalla principal.
-    * **Favorites/Favoritos:** Acceso a la lista de favoritos del usuario.
+    * **Favorites/Favoritos:** Acceso a la lista de favoritos del usuario (solo visible con sesión iniciada).
+    * **Sin sesión:** se muestran los enlaces **Iniciar sesión** y **Registrarse**.
+    * **Con sesión:** se muestra el nombre del usuario y el botón **Cerrar sesión**.
     * **Selector En/Es:** Control de idioma mediante el componente `LanguageSelector.jsx`.
 <img width="955" height="110" alt="image" src="https://github.com/user-attachments/assets/069a28ff-2802-48ff-9105-c0fb479f4e6e" />
 
@@ -52,10 +60,15 @@ Proporciona una la información del club seleccionado:
 * Muestra: Nombre, división, descripción, país, liga, estadio, año de fundación, entrenador y títulos obtenidos.
 * Incluye un **botón de retorno** que redirige automáticamente al inicio.
 
+### Register y Login (Autenticación)
+* **Register.jsx** (`/registro`): formulario de **nombre, email y contraseña**. Valida en el cliente y muestra los errores de validación que devuelve el backend (400) y los conflictos (409: email o nombre ya usado). Al registrarse correctamente, redirige al login.
+* **Login.jsx** (`/login`): formulario de **email y contraseña**. Al iniciar sesión, guarda el **token JWT** y los datos del usuario en el estado global.
+
 ### Favorites (Gestión de Favoritos)
-Esta página gestiona la persistencia mediante **LocalStorage**.
-* Muestra únicamente los equipos que el usuario ha marcado previamente.
-* **Sincronización en tiempo real:** Si el usuario desmarca el botón (♡) dentro de esta página, el equipo se elimina de la lista y la interfaz se actualiza instantáneamente sin necesidad de recargar.
+Esta página muestra los favoritos del usuario autenticado, **obtenidos siempre desde la API** (`GET /api/favorites`) y persistidos en la base de datos (ya **no** se usa LocalStorage).
+* Muestra los equipos que el usuario marcó, con su información completa.
+* **Sincronización en tiempo real:** agregar o quitar un favorito (desde las cards, el hero o esta página) pega a la API y actualiza el estado global, por lo que la interfaz se actualiza al instante.
+* Es una **ruta privada**: sin sesión iniciada redirige al login. Los botones de favorito solo aparecen con sesión activa.
 
 ### ⚠️ NotFound (Error 404)
 Si el usuario intenta acceder a una ruta inexistente (ej: `/desarrollo`), la app captura el error y muestra esta página especializada.
@@ -66,11 +79,26 @@ Si el usuario intenta acceder a una ruta inexistente (ej: `/desarrollo`), la app
 
 ---
 
+## 🔐 Autenticación y manejo de sesión
+
+La autenticación se maneja con **JWT** y la **Context API** de React.
+
+* **AuthContext (`src/context/AuthContext.jsx`):** estado global de la sesión. Expone `user`, `token`, `isAuthenticated`, `login()` y `logout()` desde cualquier componente.
+    * El **token JWT** se guarda en `localStorage`. El usuario **no** se persiste: al recargar, se rehidrata pidiendo `GET /api/auth/me` con el token (si venció, se cierra la sesión sola).
+    * **Login:** `POST /api/auth/login` devuelve `{ token, user }`; se guardan en el contexto.
+    * **Logout:** llama a `POST /api/auth/logout`, borra el token de `localStorage`, limpia el estado y redirige al inicio.
+* **ProtectedRoute (`src/components/ProtectedRoute.jsx`):** envuelve las rutas privadas (ej. `/favoritos`) y redirige a `/login` si no hay sesión.
+* **Requests protegidas:** todas envían el header `Authorization: Bearer <token>` (perfil del usuario y favoritos).
+* **FavoritesContext (`src/context/FavoritesContext.jsx`):** mantiene los favoritos del usuario, cargados desde la API. Los favoritos se persisten en la base de datos a través de la API, no en `localStorage`.
+
+---
+
 ## Estructura del proyecto
 - `public/logos`: recursos visuales  
-- `src/components`: componentes reutilizables  
-- `src/pages`: páginas principales (Home, Details, Favorites, NotFound)  
-- `src/services`: lógica de API y LocalStorage  
+- `src/components`: componentes reutilizables (incluye `ProtectedRoute`)  
+- `src/pages`: páginas principales (Home, Details, Favorites, Login, Register, NotFound)  
+- `src/context`: estado global (`AuthContext`, `FavoritesContext`)  
+- `src/services`: lógica de llamadas a la API (`authService`, `teamsService`, `favoritesService`)  
 - `src/locales`: archivos de traducción  
 - `src/utils`: utilidades de la aplicación  
 
@@ -81,5 +109,6 @@ Si el usuario intenta acceder a una ruta inexistente (ej: `/desarrollo`), la app
 - Tailwind CSS  
 - react-router-dom  
 - react-i18next  
-- MockAPI  
-- LocalStorage  
+- Context API (estado global de auth y favoritos)  
+- JWT (autenticación)  
+- API REST propia (backend Express + PostgreSQL)  
