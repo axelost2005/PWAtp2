@@ -7,7 +7,8 @@
         "favorites": "Favorites",
         "login": "Log in",
         "register": "Sign up",
-        "greeting": "Hi, {{name}}"
+        "greeting": "Hi, {{name}}",
+        "logout": "Log out"
     },
     "common": {
         "backHome": "Back to home"

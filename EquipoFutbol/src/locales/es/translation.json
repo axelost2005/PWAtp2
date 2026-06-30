@@ -7,7 +7,8 @@
         "favorites": "Favoritos",
         "login": "Iniciar sesión",
         "register": "Registrarse",
-        "greeting": "Hola, {{name}}"
+        "greeting": "Hola, {{name}}",
+        "logout": "Cerrar sesión"
     },
     "common": {
         "backHome": "Volver al inicio"
