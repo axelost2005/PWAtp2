@@ -81,7 +81,15 @@
     "favorites": {
         "title": "Favoritos",
         "description": "Acá se mostrarán los equipos favoritos del usuario.",
-        "empty": "Todavía no agregaste equipos a favoritos."
+        "empty": "Todavía no agregaste equipos a favoritos.",
+        "loading": "Cargando favoritos...",
+        "errors": {
+            "unauthorized": "Tu sesión expiró. Iniciá sesión de nuevo.",
+            "forbidden": "No tenés permiso para esta acción.",
+            "notFound": "El equipo no existe.",
+            "alreadyAdded": "El equipo ya está en favoritos.",
+            "generic": "No se pudieron cargar los favoritos. Probá de nuevo."
+        }
     },
     "notFound": {
         "description": "La página que estás buscando no existe."

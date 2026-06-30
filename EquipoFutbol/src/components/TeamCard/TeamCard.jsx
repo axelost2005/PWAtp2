@@ -1,39 +1,24 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getTranslatedTeam } from "../../utils/teamTranslations";
 import { getTeamColors } from "../../utils/teamColors";
-import { isFavoriteTeam, toggleFavoriteTeam } from "../../services/localStorage";
+import { useAuth } from "../../context/AuthContext";
+import { useFavorites } from "../../context/FavoritesContext";
 
-function TeamCard({ team, onFavoriteChange }) {
+function TeamCard({ team }) {
     const { t, i18n } = useTranslation();
+    const { isAuthenticated } = useAuth();
+    const { isFavorite, toggleFavorite } = useFavorites();
 
     const currentLanguage = (i18n.resolvedLanguage || i18n.language || "es").split("-")[0];
     const translatedTeam = getTranslatedTeam(team, currentLanguage);
     const colors = getTeamColors(team.name);
 
-    const [isFavorite, setIsFavorite] = useState(false);
+    const favorite = isFavorite(team.id);
 
-    // Sincroniza el corazón con localStorage y con el evento "favorites-updated"
-    // que dispara el hero, para que ambos corazones muestren siempre lo mismo.
-    useEffect(() => {
-        const syncFavorite = () => setIsFavorite(isFavoriteTeam(team.id));
-
-        syncFavorite();
-        window.addEventListener("favorites-updated", syncFavorite);
-
-        return () => window.removeEventListener("favorites-updated", syncFavorite);
-    }, [team.id]);
-
+    // El alta/baja pega a la API a través del context; los errores se manejan ahí.
     const handleFavoriteClick = () => {
-        const updatedFavorites = toggleFavoriteTeam(team);
-
-        setIsFavorite(isFavoriteTeam(team.id));
-        window.dispatchEvent(new Event("favorites-updated"));
-
-        if (onFavoriteChange) {
-            onFavoriteChange(updatedFavorites);
-        }
+        toggleFavorite(team);
     };
 
     return (
@@ -44,22 +29,24 @@ function TeamCard({ team, onFavoriteChange }) {
                     background: `radial-gradient(ellipse 90% 95% at 50% 0%, ${colors.primary}4d, transparent 72%)`,
                 }}
             >
-                <button
-                    type="button"
-                    onClick={handleFavoriteClick}
-                    className={`absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border text-lg transition hover:scale-110 ${
-                        isFavorite
-                            ? "border-transparent bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
-                            : "border-white/15 bg-white/10 text-white/80 backdrop-blur-sm hover:bg-white/20 hover:text-red-400"
-                    }`}
-                    aria-label={
-                        isFavorite
-                            ? t("teamCard.removeFavorite")
-                            : t("teamCard.addFavorite")
-                    }
-                >
-                    {isFavorite ? "♥" : "♡"}
-                </button>
+                {isAuthenticated && (
+                    <button
+                        type="button"
+                        onClick={handleFavoriteClick}
+                        className={`absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border text-lg transition hover:scale-110 ${
+                            favorite
+                                ? "border-transparent bg-red-500 text-white shadow-lg shadow-red-500/30 hover:bg-red-600"
+                                : "border-white/15 bg-white/10 text-white/80 backdrop-blur-sm hover:bg-white/20 hover:text-red-400"
+                        }`}
+                        aria-label={
+                            favorite
+                                ? t("teamCard.removeFavorite")
+                                : t("teamCard.addFavorite")
+                        }
+                    >
+                        {favorite ? "♥" : "♡"}
+                    </button>
+                )}
 
                 <img
                     src={translatedTeam.logo}

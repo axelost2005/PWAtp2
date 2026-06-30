@@ -1,13 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import TeamCard from "./TeamCard";
-import { beforeEach, describe, it } from "vitest";
-import { isFavoriteTeam} from "../../services/localStorage";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import i18n from "../../i18n";
 
-beforeEach(() =>{
+// Mockeamos los contexts de auth y favoritos para aislar la card.
+// Con sesión iniciada, la card muestra el botón de favorito.
+const mockIsFavorite = vi.fn();
+
+vi.mock("../../context/AuthContext", () => ({
+    useAuth: () => ({ isAuthenticated: true }),
+}));
+
+vi.mock("../../context/FavoritesContext", () => ({
+    useFavorites: () => ({
+        isFavorite: mockIsFavorite,
+        toggleFavorite: vi.fn(),
+    }),
+}));
+
+beforeEach(() => {
     i18n.changeLanguage("es");
 });
+
 const mockTeam = {
     id: "1",
     name: "Boca Juniors",
@@ -18,38 +33,37 @@ const mockTeam = {
     stadium: "La Bombonera",
     titles: 74,
 };
-vi.mock("../../services/localStorage", () => ({
-    isFavoriteTeam: vi.fn(),
-    toggleFavoriteTeam: vi.fn(),
-}));
 
-describe("teamCard", ()=>{
+describe("teamCard", () => {
     it("muestra el boton para agregar a favoritos", () => {
-        isFavoriteTeam.mockReturnValue(false);
+        mockIsFavorite.mockReturnValue(false);
         render(
             <MemoryRouter>
-                <TeamCard team={mockTeam}/>
+                <TeamCard team={mockTeam} />
             </MemoryRouter>
         );
 
-        expect(screen.getByRole("button", {name: "Agregar a favoritos",})).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Agregar a favoritos" })).toBeInTheDocument();
         expect(screen.getByText("♡")).toBeInTheDocument();
     });
+
     it("muestra el boton para quitar de favoritos", () => {
-        isFavoriteTeam.mockReturnValue(true);
+        mockIsFavorite.mockReturnValue(true);
         render(
             <MemoryRouter>
-                <TeamCard team={mockTeam}/>
+                <TeamCard team={mockTeam} />
             </MemoryRouter>
         );
 
-        expect(screen.getByRole("button", {name: "Quitar de favoritos",})).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Quitar de favoritos" })).toBeInTheDocument();
         expect(screen.getByText("♥")).toBeInTheDocument();
     });
-    it("muestra el logo del equipo",()=>{
+
+    it("muestra el logo del equipo", () => {
+        mockIsFavorite.mockReturnValue(false);
         render(
             <MemoryRouter>
-                <TeamCard team={mockTeam}/>
+                <TeamCard team={mockTeam} />
             </MemoryRouter>
         );
         const image = screen.getByRole("img", {
@@ -57,11 +71,13 @@ describe("teamCard", ()=>{
         });
         expect(image).toBeInTheDocument();
         expect(image).toHaveAttribute("src", mockTeam.logo);
-    })
-    it("muestra datos del equipo",() =>{
+    });
+
+    it("muestra datos del equipo", () => {
+        mockIsFavorite.mockReturnValue(false);
         render(
             <MemoryRouter>
-                <TeamCard team={mockTeam}/>
+                <TeamCard team={mockTeam} />
             </MemoryRouter>
         );
         expect(screen.getByText("Boca Juniors")).toBeInTheDocument();
@@ -70,6 +86,5 @@ describe("teamCard", ()=>{
         expect(screen.getByText("Liga Profesional")).toBeInTheDocument();
         expect(screen.getByText("La Bombonera")).toBeInTheDocument();
         expect(screen.getByText("74")).toBeInTheDocument();
-    })
-    
-})
+    });
+});

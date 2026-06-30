@@ -81,7 +81,15 @@
     "favorites": {
     "title": "Favorites",
     "description": "These are the user's saved favorite teams.",
-    "empty": "You have not added any favorite teams yet."
+    "empty": "You have not added any favorite teams yet.",
+    "loading": "Loading favorites...",
+    "errors": {
+        "unauthorized": "Your session expired. Please log in again.",
+        "forbidden": "You don't have permission for this action.",
+        "notFound": "The team does not exist.",
+        "alreadyAdded": "The team is already in favorites.",
+        "generic": "Could not load favorites. Please try again."
+    }
 },
     "notFound": {
         "description": "The page you are looking for does not exist."

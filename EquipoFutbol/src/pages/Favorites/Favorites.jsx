@@ -1,21 +1,12 @@
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TeamCard from "../../components/TeamCard/TeamCard";
-import { getFavoriteTeams } from "../../services/localStorage";
+import { useFavorites } from "../../context/FavoritesContext";
 
 function Favorites() {
     const { t } = useTranslation();
 
-    const [favoriteTeams, setFavoriteTeams] = useState([]);
-    const [search, setSearch] = useState("");
-
-    useEffect(() => {
-        setFavoriteTeams(getFavoriteTeams());
-    }, []);
-
-    const handleFavoriteChange = (updatedFavorites) => {
-        setFavoriteTeams(updatedFavorites);
-    };
+    // Los favoritos salen del context, que los carga desde GET /api/favorites.
+    const { favorites, loading, error } = useFavorites();
 
     return (
         <section className="mx-auto w-full max-w-6xl px-4 py-12">
@@ -23,7 +14,17 @@ function Favorites() {
                 {t("favorites.title")}
             </h1>
 
-            {favoriteTeams.length === 0 ? (
+            {error && (
+                <p className="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-red-300">
+                    {t(error)}
+                </p>
+            )}
+
+            {loading ? (
+                <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
+                    {t("favorites.loading")}
+                </p>
+            ) : favorites.length === 0 ? (
                 <p className="rounded-2xl border border-white/10 bg-white/5 p-4 text-slate-300">
                     {t("favorites.empty")}
                 </p>
@@ -34,12 +35,8 @@ function Favorites() {
                     </p>
 
                     <div className="grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {favoriteTeams.map((team) => (
-                            <TeamCard
-                                key={team.id}
-                                team={team}
-                                onFavoriteChange={handleFavoriteChange}
-                            />
+                        {favorites.map((team) => (
+                            <TeamCard key={team.id} team={team} />
                         ))}
                     </div>
                 </>
