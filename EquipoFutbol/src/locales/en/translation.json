@@ -4,10 +4,40 @@
     },
     "navbar": {
         "home": "Home",
-        "favorites": "Favorites"
+        "favorites": "Favorites",
+        "login": "Log in",
+        "register": "Sign up",
+        "greeting": "Hi, {{name}}"
     },
     "common": {
         "backHome": "Back to home"
+    },
+    "auth": {
+        "fields": {
+            "name": "Name",
+            "email": "Email",
+            "password": "Password"
+        },
+        "login": {
+            "title": "Log in",
+            "submit": "Sign in",
+            "submitting": "Signing in...",
+            "noAccount": "Don't have an account?",
+            "registerLink": "Sign up"
+        },
+        "register": {
+            "title": "Create account",
+            "submit": "Sign up",
+            "submitting": "Signing up...",
+            "success": "Account created! Redirecting to login...",
+            "haveAccount": "Already have an account?",
+            "loginLink": "Log in"
+        },
+        "validation": {
+            "nameRequired": "Name is required.",
+            "emailInvalid": "Enter a valid email.",
+            "passwordMin": "Password must be at least {{min}} characters."
+        }
     },
     "home": {
     "title": "Football teams",

@@ -4,10 +4,40 @@
     },
     "navbar": {
         "home": "Inicio",
-        "favorites": "Favoritos"
+        "favorites": "Favoritos",
+        "login": "Iniciar sesión",
+        "register": "Registrarse",
+        "greeting": "Hola, {{name}}"
     },
     "common": {
         "backHome": "Volver al inicio"
+    },
+    "auth": {
+        "fields": {
+            "name": "Nombre",
+            "email": "Email",
+            "password": "Contraseña"
+        },
+        "login": {
+            "title": "Iniciar sesión",
+            "submit": "Ingresar",
+            "submitting": "Ingresando...",
+            "noAccount": "¿No tenés cuenta?",
+            "registerLink": "Registrate"
+        },
+        "register": {
+            "title": "Crear cuenta",
+            "submit": "Registrarme",
+            "submitting": "Registrando...",
+            "success": "¡Cuenta creada! Te redirigimos al login...",
+            "haveAccount": "¿Ya tenés cuenta?",
+            "loginLink": "Iniciá sesión"
+        },
+        "validation": {
+            "nameRequired": "El nombre es obligatorio.",
+            "emailInvalid": "Ingresá un email válido.",
+            "passwordMin": "La contraseña debe tener al menos {{min}} caracteres."
+        }
     },
     "home": {
     "title": "Equipos de fútbol",
